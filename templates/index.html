@@ -1,0 +1,44 @@
+<html>
+    <head>
+       <title>Index</title>
+       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <h1>Registration</h1>
+        <form action='/registration' method='post'>
+            Email: <input type='text' name='email'><br>
+            First Name: <input type='text' name='first_name'><br>
+            Last Name: <input type='text' name='last_name'><br>
+            Password: <input type='password' name='password'><br>
+            Password Confirmation: <input type='password' name='password_confirmation'><br>
+            {% with errors = get_flashed_messages(category_filter=["error"]) %}
+                <!-- {% with messages = get_flashed_messages(category_filter=["message"]) %} -->
+                    {% if errors %}
+                        {% for error in errors %}
+                            <p>{{error}}</p>
+                        {% endfor %}
+                    {% else %}
+                        {% for message in messages %}
+                            <p>{{message}}</p>
+                        {% endfor %}
+                    {% endif %}
+                <!-- {% endwith %} -->
+            {% endwith %}
+            <input type='submit' value='Submit'>
+        </form>
+        <br>
+        <h1>Existing Users</h1>
+        <form action='/login' method = 'post'>
+            Email: <input type='text' name='mail'><br>
+            Password: <input type='password' name='pass'><br>
+            <input type='submit' value='Submit'>
+        </form>
+        {% with invalid = get_flashed_messages(category_filter=["invalid"]) %}
+            {% if invalid %}
+                {% for bad in invalid %}
+                    <p>{{bad}}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </body>
+</html>

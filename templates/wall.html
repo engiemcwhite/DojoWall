@@ -1,0 +1,51 @@
+<html>
+    <head>
+       <title>Wall</title>
+       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <h1>Welcome to the Codingdojo Wall! </h1>
+        <h5> Welcome, {{user[0]['first_name']}}!</h5>
+        <a href="/logout">Log Out</a><br> 
+        <form action='/message' method='post'>
+            <h3>Post a Message</h3>
+            <textarea name="posts" rows="10" cols="120"></textarea> <br>
+            <input type='submit' value='Post a Message'>
+        </form>
+        {% for post in posts: %}
+            <b>Posted by: {{post['first_name']}} {{post['last_name']}} {{post['updated_at'].strftime('%B %d %Y')}}</b>
+            <p>{{post['content']}}</p>
+            {% if session['user'] == post['user_id'] %}
+                {% if now - post['updated_at'] <= thirty : %}
+                    <form action='/delete' method='post'>
+                        <input type='hidden' name = 'texttype' value='post'>
+                        <input type='hidden' name = 'post' value = '{{post["id"]}}'>
+                        <input type='submit' value='Delete Message'>
+                    </form>
+                {% endif %}
+            {% endif %}
+            {% for comment in comments: %}
+                {% if(comment['post_id'] == post['id']): %}
+                    <b>Commented on by: {{comment['first_name']}} {{comment['last_name']}} {{comment['updated_at'].strftime('%B %d %Y')}}</b>
+                    <p>{{comment['reply']}}</p>
+                    {% if session['user'] == comment['user_id'] %}
+                    
+                        {% if now - comment['updated_at'] <= thirty : %}
+                            <form action='/delete' method='post'>
+                                <input type='hidden' name = 'texttype' value='comment'>
+                                <input type='hidden' name = 'comment' value = '{{comment["id"]}}'>
+                                <input type='submit' value='Delete Message'>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            <form action='/comment' method='post'>
+                <h5>Post a Comment</h5>
+                <input type='hidden' name='postid' value='{{post["id"]}}'>
+                <textarea name="comment" rows="5" cols="50"></textarea> <br>
+                <input type='submit' value='Post a Comment'>
+            </form>
+        {% endfor %}
+    </body>
+</html>
